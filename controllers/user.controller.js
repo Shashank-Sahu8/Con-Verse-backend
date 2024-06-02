@@ -2,7 +2,7 @@ const User = require("../models/user.model");
 const  transporter  = require("../services/email_services");
 const UserService = require("../services/user.services")
 const bcrypt = require('bcrypt');
-const jwt=require('jsonwebtoken');
+const jwt=require('jsonwebtoken');//KIA-backend
 
 
 exports.register=async(req,res,next)=>{
