@@ -2,6 +2,15 @@ const mongoose=require('mongoose');
 const bcrypt = require('bcrypt');
 const db=require('../db/db');
 
+const FriendRequestSchema = new mongoose.Schema({
+    from: { type: String },
+    accepted: { type: Boolean, default: false }
+});
+
+const SentRequestSchema = new mongoose.Schema({
+    to: { type: String },
+    accepted: { type: Boolean, default: false }
+});
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -14,6 +23,13 @@ const userSchema=new mongoose.Schema({
            
         },
     },
+    user_name:{
+        type:String,
+        required:true,
+        trim:true,
+        unique:true,
+    },
+
     email:{
         type:String,
         lowercase:true,
@@ -29,7 +45,18 @@ const userSchema=new mongoose.Schema({
         type:String,
         trim:true,
         required:true,
-    }
+    },
+    // verified:{
+    //     type:Boolean,
+    //     required:true,
+    //     default:false,
+    // },
+    notification_id:{
+        type:String,
+        required:true,
+    },
+     friendRequests: { type: [FriendRequestSchema], default: [] },
+     sentRequests: { type: [SentRequestSchema], default: [] }
 },{timestamps:true});
 
 userSchema.pre('save',async function(){

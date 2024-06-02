@@ -2,10 +2,10 @@ const UserModel=require('../models/user.model');
 const jwt=require('jsonwebtoken');
 
 class UserService{
-    static async registerUser(email,password,name)
+    static async registerUser(email,password,name,user_name,notification_id)
     {
         try{
-            const user=new UserModel({email,password,name});
+            const user=new UserModel({email,password,name,user_name,notification_id});
             return await user.save();
         }catch(err){
             throw err;
