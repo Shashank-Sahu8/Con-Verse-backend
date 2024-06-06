@@ -46,11 +46,6 @@ const userSchema=new mongoose.Schema({
         trim:true,
         required:true,
     },
-    // verified:{
-    //     type:Boolean,
-    //     required:true,
-    //     default:false,
-    // },
     notification_id:{
         type:String,
         required:true,
