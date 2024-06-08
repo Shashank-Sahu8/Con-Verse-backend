@@ -22,7 +22,7 @@ exports.register=async(req,res,next)=>{
             {
                 const secret=process.env.JWT_SECRET_KEY;
                 const token_verify =jwt.sign({email,password,name,user_name,notification_id},secret,{expiresIn:'10m'});
-                const link=`${process.env.LINK}/${token_verify}`;  
+                const link=`${process.env.LINK}/?token=${token_verify}`;  
                 console.log(link);
                 const info=await transporter.sendMail({
                     form:process.env.EMAIL_FROM,
