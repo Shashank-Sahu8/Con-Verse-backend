@@ -45,7 +45,7 @@ exports.register=async(req,res,next)=>{
 }
 
 exports.verify_email=async(req,res)=>{
-    const{token}=req.params;
+    const{token}=req.query;
     try{
         const decoded =jwt.verify(token,process.env.JWT_SECRET_KEY);
         const{email,password,name,user_name,notification_id}=decoded;

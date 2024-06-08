@@ -7,7 +7,7 @@ const Middleware=require('../middlewares/auth-middleware');
 
 router.post('/registration',UserController.register);
 
-router.post('/verify-email/:token',UserController.verify_email);
+router.post('/verify-email',UserController.verify_email);
 
 router.post('/login',UserController.login);
 
