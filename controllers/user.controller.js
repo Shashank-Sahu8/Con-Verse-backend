@@ -147,7 +147,7 @@ exports.forgetpassword=async(req,res)=>{
             else{
                 const secret=user._id+process.env.JWT_SECRET_KEY;
                 const token =jwt.sign({_id:user._id},secret,{expiresIn:'15m'});
-                const link=`${process.env.LINK}${user._id}/${token}`;  
+                const link=`${process.env.LINK1}?token=${token}&user_id=${user._id}`;  
                 console.log(link);
 
                 const info=await transporter.sendMail({
@@ -158,7 +158,6 @@ exports.forgetpassword=async(req,res)=>{
                 });
                 res.send({"status":"success","message":"reset password email have been send"})
             }
-
         }
     else
     {
