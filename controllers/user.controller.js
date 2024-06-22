@@ -140,7 +140,48 @@ exports.changePassword=async(req,res,next)=>{
 }
 
 exports.userdata=async(req,res)=>{
-    res.send({"name":req.user.name,"email":req.user.email,"token":req.user.token});
+
+    try{
+        const username=req.user.name;
+
+        const acceptedUsers = await User.find({
+            'sentRequests.to': username,
+            'sentRequests.accepted': false
+        }).select('user_name');
+
+        const acceptedFriends = await User.find({
+            'friendRequests.from': username,
+            'friendRequests.accepted': false
+        }).select('user_name');
+
+        const connection_acceptedUsers = await User.find({
+            'sentRequests.to': username,
+            'sentRequests.accepted': true
+        }).select('user_name');
+
+        const connection_acceptedFriends = await User.find({
+            'friendRequests.from': username,
+            'friendRequests.accepted': true
+        }).select('user_name');
+
+        res.status(200).send({
+            "name":req.user.name,
+            "email":req.user.email,
+            "token":req.user.token,
+            "image":req.user.image,
+            "pending accept":acceptedUsers.length,
+            "pending sent":acceptedFriends.length,
+            "connections":connection_acceptedUsers.length+connection_acceptedFriends.length
+        });
+
+    }catch(err){
+
+        console.error(err);
+        res.status(500).send({ error: 'Internal Server Error' });
+
+    }
+
+
 }
 
 exports.forgetpassword=async(req,res)=>{
@@ -313,8 +354,9 @@ exports.pendingRequests=async(req,res)=>{
         }
         const acceptedFriends = await User.find({
             'friendRequests.from': username,
-            'friendRequests.accepted': false
+            'friendRequests.accepted': false,
         }).select('user_name');
+
         res.status(200).send(acceptedFriends);
     }catch(err)
     {
