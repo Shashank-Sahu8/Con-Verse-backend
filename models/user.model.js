@@ -16,12 +16,7 @@ const userSchema=new mongoose.Schema({
     name:{
         type:String,
         required:true,
-        trim:true,
-        validate: {
-            validator: value => /^[a-zA-Z\s]{3,20}$/.test(value),
-            message: 'Teamname is not valid',
-           
-        },
+        trim:true
     },
     user_name:{
         type:String,
@@ -46,9 +41,9 @@ const userSchema=new mongoose.Schema({
         trim:true,
         required:true,
     },
-    notification_id:{
+    image:{
         type:String,
-        required:true,
+        trim:true
     },
      friendRequests: { type: [FriendRequestSchema], default: [] },
      sentRequests: { type: [SentRequestSchema], default: [] }

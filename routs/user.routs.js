@@ -2,10 +2,15 @@
 const router=require('express').Router();
 const UserController=require('../controllers/user.controller');
 const Middleware=require('../middlewares/auth-middleware');
+const multer=require('multer');
 
+var uploader=multer({
+    storage:multer.diskStorage({}),
+    limits:{fileSize:500000}
+});
 //  Public Routes
 
-router.post('/registration',UserController.register);
+router.post('/registration',uploader.single("file"),UserController.register);
 
 router.post('/verify-email',UserController.verify_email);
 

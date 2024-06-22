@@ -3,14 +3,21 @@ const  transporter  = require("../services/email_services");
 const UserService = require("../services/user.services")
 const bcrypt = require('bcrypt');
 const jwt=require('jsonwebtoken');//KIA-backend  30.30.24.180
+const cloudinary=require('cloudinary').v2;
+const multer = require('multer');
+
 
 
 exports.register=async(req,res,next)=>{
     try{
-        const {email,password,name,user_name,notification_id}=req.body;
+        const {email,password,name,user_name}=req.body;
+        const filee=req.file.path;
         const user=await UserService.checkuser(email);
         const uu=await User.findOne({user_name});
-        if(uu)
+        if (!filee) {
+            return res.status(400).json({ status: false, success: "Photo is required" });
+          }
+        else if(uu)
             {
                 res.status(401).json({status:true,success:"User Name already used"});   
             }
@@ -18,10 +25,12 @@ exports.register=async(req,res,next)=>{
             {
                 res.status(401).json({status:true,success:"User already registered"});
             }
-        else if(email && password && name&&notification_id && user_name)
+        else if(email && password && name && user_name)
             {
+                const uurl=await UserService.uploadFile(filee);
+                console.log(uurl);
                 const secret=process.env.JWT_SECRET_KEY;
-                const token_verify =jwt.sign({email,password,name,user_name,notification_id},secret,{expiresIn:'10m'});
+                const token_verify =jwt.sign({email,password,name,user_name,uurl},secret,{expiresIn:'10m'});
                 const link=`${process.env.LINK}/?token=${token_verify}`;  
                 console.log(link);
                 const info=await transporter.sendMail({
@@ -48,9 +57,9 @@ exports.verify_email=async(req,res)=>{
     const{token}=req.query;
     try{
         const decoded =jwt.verify(token,process.env.JWT_SECRET_KEY);
-        const{email,password,name,user_name,notification_id}=decoded;
+        const{email,password,name,user_name,uurl}=decoded;
 
-        const successRes=await UserService.registerUser(email,password,name,user_name,notification_id);
+        const successRes=await UserService.registerUser(email,password,name,user_name,uurl);
 
         const user=await UserService.checkuser(email);
 
@@ -169,6 +178,10 @@ exports.resetforgetpassword=async(req,res)=>{
     const{password,confirm_password}=req.body;
     const{id,token}=req.params;
     const user=await User.findById(id);
+    if(!user)
+        {
+           return res.status(401).json({status:true,success:"No such user exists"});
+        }
     const new_token=user._id+process.env.JWT_SECRET_KEY;
 
     try{
