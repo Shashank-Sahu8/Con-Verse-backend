@@ -166,8 +166,8 @@ exports.userdata=async(req,res)=>{
 
         res.status(200).send({
             "name":req.user.name,
+            "user_name":req.user.user_name,
             "email":req.user.email,
-            "token":req.user.token,
             "image":req.user.image,
             "pending accept":acceptedUsers.length,
             "pending sent":acceptedFriends.length,
