@@ -143,7 +143,6 @@ exports.userdata=async(req,res)=>{
 
     try{
         const username=req.user.name;
-
         const acceptedUsers = await User.find({
             'sentRequests.to': username,
             'sentRequests.accepted': false
@@ -320,7 +319,8 @@ exports.acceptRequests=async(req,res)=>{
 }
 
 exports.showfriends=async(req,res)=>{
-    const { username } = req.body;
+    const username=req.user.user_name;
+    console.log(username);
     try {
         const user = await User.findOne({ user_name:username });
         if (!user) {
@@ -330,12 +330,12 @@ exports.showfriends=async(req,res)=>{
         const acceptedFriends = await User.find({
             'friendRequests.from': username,
             'friendRequests.accepted': true
-        }).select('user_name');
+        }).select('name user_name email image -_id');
 
         const acceptedUsers = await User.find({
             'sentRequests.to': username,
             'sentRequests.accepted': true
-        }).select('user_name');
+        }).select('name user_name email image -_id');
 
         const acceptedUsersAndFriends = [...acceptedFriends, ...acceptedUsers];
         res.status(200).send(acceptedUsersAndFriends);
