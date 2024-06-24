@@ -8,7 +8,7 @@ const rateLimit = require('express-rate-limit');
 
 const limiter = rateLimit({
     windowMs: 3 * 60 * 1000, 
-    max: 30, 
+    max: 100, 
     message: 'Bado Badi Bado Badi !!'
   });
 

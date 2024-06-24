@@ -12,6 +12,8 @@ exports.register=async(req,res,next)=>{
     try{
         const {email,password,name,user_name}=req.body;
         const filee=req.file.path;
+        console.log(filee);
+        console.log(password);
         const user=await UserService.checkuser(email);
         const uu=await User.findOne({user_name});
         if (!filee) {
@@ -57,8 +59,9 @@ exports.verify_email=async(req,res)=>{
     const{token}=req.query;
     try{
         const decoded =jwt.verify(token,process.env.JWT_SECRET_KEY);
+        console.log("wait");
         const{email,password,name,user_name,uurl}=decoded;
-
+        console.log(password);
         const successRes=await UserService.registerUser(email,password,name,user_name,uurl);
 
         const user=await UserService.checkuser(email);
@@ -80,7 +83,7 @@ exports.verify_email=async(req,res)=>{
 exports.login=async(req,res,next)=>{
     try{
         const {email,password}=req.body;
-
+        console.log(password);
         if(!email || !password)
             {
                 return res.status(401).json({status:false,success:"All fields required"});

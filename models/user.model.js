@@ -50,6 +50,8 @@ const userSchema=new mongoose.Schema({
 },{timestamps:true});
 
 userSchema.pre('save',async function(){
+    if (this.isModified('password')) {
+        
     try{
         var user=this;
         const salt=await(bcrypt.genSalt(10));
@@ -59,6 +61,7 @@ userSchema.pre('save',async function(){
     {
         throw err;
     }
+}
 });
 
 userSchema.methods.compairPassword=async function(userPassword){
