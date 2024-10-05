@@ -12,7 +12,13 @@ var uploader=multer({
 
 router.post('/registration',uploader.single("file"),UserController.register);
 
-router.post('/verify-email',UserController.verify_email);
+router.post('/verify-email',UserController.verify_email);++++++++++
+
+
+
+
+
+
 
 router.post('/login',UserController.login);
 
